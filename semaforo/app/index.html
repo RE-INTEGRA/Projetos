@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+  <head>
+
+    <!-- socket client library -->
+    <meta charset="utf-8">
+
+    <title>Semáforo</title>
+    <!-- socket client library -->
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <!-- jquery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" rel="stylesheet">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script crossorigin="anonymous" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!-- include stylesheet -->
+    <link href="public/index.css" rel="stylesheet" type="text/css">
+
+  </head>
+
+  <script>
+    var socket = io().connect('http://localhost:3000');
+  </script>
+
+<body>
+  <section class="app">
+    <div class="jumbotron">
+      <div class="text-center">
+        <h1>Monitoramento de Semáforo</h1>
+        <p></p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-4">
+          <h4>
+            Semáforo de carro</h4>
+          <div class="center">
+            <div class="circle">
+              <div class="circle small red active" id="semVermelhoCarro"></div>
+            </div>
+            <div class="circle">
+              <div class="circle small yellow active" id="semAmareloCarro"></div>
+            </div>
+            <div class="circle">
+              <div class="circle small green" id="semVerdeCarro"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <h4>
+            Semáforo de Pedestre</h4>
+          <div class="circle">
+            <div class="circle small red active" id="semVermelhoPedestre"></div>
+          </div>
+
+          <div class="circle">
+            <div class="circle small green" id="semVerdePedestre"></div>
+          </div>
+        </div>
+        <div class="col-xs-4">
+          <h4>
+            Botôes de Acionamento Semaforo</h4>
+          <div class="text-center">
+            <button class="btn btn-lg btn-default btn-success" onclick="pedestreAcionado()">
+              Pedestre
+            </button>
+            <button class="btn btn-lg btn-default btn-danger" onclick="alertaAcionado()">
+              Alerta
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+    <script>
+      // Usado para garantir que o Dom já foi todo introduzido na página
+      $(document).ready(function () {
+        // servidor alerta para mudanca do estado do semáforo de carro para verde
+        socket.on('carroVerde', function (semaforo) {
+          // troca as classes para ativar semaforo de carro e inactivar o que estava ativo
+          $('#semVerdeCarro').addClass('active');
+          $('#semAmareloCarro').removeClass('active');
+          $('#semVermelhoCarro').removeClass('active');
+          // altera semaforo de pedestre
+          $('#semVerdePedestre').removeClass('active');
+          $('#semVermelhoPedestre').addClass('active');
+
+        })
+        // servidor alerta para mudanca do estado do semáforo de carro para amarelo
+        socket.on('carroAmarelo', function (semaforo) {
+          // troca as classes para ativar semaforo e inactivar o que estava ativo
+          $('#semAmareloCarro').addClass('active');
+          $('#semVerdeCarro').removeClass('active');
+          $('#semVermelhoCarro').removeClass('active');
+          // altera semaforo de pedestre
+          $('#semVerdePedestre').removeClass('active');
+          $('#semVermelhoPedestre').addClass('active');
+
+
+        })
+        // servidor alerta para mudanca do estado do semáforo de carro para vermelho
+        socket.on('carroVermelho', function (semaforo) {
+          // troca as classes para ativar semaforo e inactivar o que estava ativo
+          $('#semVermelhoCarro').addClass('active');
+          $('#semAmareloCarro').removeClass('active');
+          $('#semVerdeCarro').removeClass('active');
+          // altera semaforo de pedestre
+          $('#semVerdePedestre').addClass('active');
+          $('#semVermelhoPedestre').removeClass('active');
+
+
+        })
+
+        // servidor liga estado alerta
+        socket.on('alertaLigado', function (semaforo) {
+          // troca as classes para ativar semaforo e inactivar o que estava ativo
+          $('#semVermelhoCarro').removeClass('active');
+          $('#semAmareloCarro').addClass('active');
+          $('#semVerdeCarro').removeClass('active');
+          $('#semVerdePedestre').removeClass('active');
+          $('#semVermelhoPedestre').removeClass('active');
+        })
+        // servidor desliga estado alerta
+        socket.on('alertaDesligado', function (semaforo) {
+          // troca as classes para ativar semaforo e inactivar o que estava ativo
+          $('#semVermelhoCarro').removeClass('active');
+          $('#semAmareloCarro').removeClass('active');
+          $('#semVerdeCarro').removeClass('active');
+          $('#semVerdePedestre').removeClass('active');
+          $('#semVermelhoPedestre').removeClass('active');
+        })
+
+      });
+
+
+      // alerta foi acionado. Emitir sinal socket para o servidor
+      function alertaAcionado() {
+
+        socket.emit('alertaAcionado');
+
+      }
+
+      // pedestre foi acionado. Emitir sinal socket para o servidor
+      function pedestreAcionado() {
+
+        socket.emit('pedestreAcionado');
+
+      }
+    </script>
+
+  </html>

@@ -13,13 +13,13 @@ Se o botão de alerta for clicado, o semáforo de carro fica amarelo com intermi
 
 ## Material Necessário
 
- 1. 5 leds
- 2. 2 butões
- 3. jumpers q.b.
- 4. protoboard
- 5. arduino uno
- 6. resistores 220 ohms
+ 1. 5 leds;
+ 2. 2 butões;
+ 3. jumpers q.b.;
+ 4. protoboard;
+ 5. arduino uno;
+ 6. resistores 220 ohms;
 
- 
+
 
 ## Montagem

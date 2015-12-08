@@ -1,0 +1,19 @@
+{
+  "name": "ipsc",
+  "version": "1.0.0",
+  "description": "target project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "airsoft",
+    "target",
+    "arduino"
+  ],
+  "author": "Joao Campos, Mario Castelao",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^1.3.7"
+  }
+}
